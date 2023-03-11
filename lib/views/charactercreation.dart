@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:mystic_trails/models/universe.dart';
 import 'package:provider/provider.dart';
 
 import '../models/character.dart';
@@ -18,8 +19,8 @@ class _CharacterCreation extends State<CharacterCreation> {
   
 
   void updateName(String newName){
-    var character = context.read<CharacterModel>();
-    character.changeName(newName);
+    var universe = context.read<Universe>();
+    universe.updateName(newName);
   }
 
   ElevatedButton textPopup(String buttonText, String title, void Function(String) onOkPressed ){
@@ -71,8 +72,8 @@ class _CharacterCreation extends State<CharacterCreation> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             textPopup("Change Name", "Change Name", updateName),
-            Consumer<CharacterModel>(builder: (context, characterModel, child){
-              return Text("name: ${characterModel.name}");
+            Consumer<Universe>(builder: (context, characterModel, child){
+              return Text("name: ${characterModel.mainCharacter.name}");
             },),
             TextButton(
               onPressed: (){

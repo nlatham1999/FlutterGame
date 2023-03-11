@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:mystic_trails/models/universe.dart';
 
-class CharacterModel extends ChangeNotifier {
+class CharacterModel {
   String name;
   int health;
   int strength;
@@ -11,9 +12,4 @@ class CharacterModel extends ChangeNotifier {
     required this.health,
     required this.strength
   });
-
-  void changeName(String newName){
-    name = newName;
-    notifyListeners();
-  }
 }

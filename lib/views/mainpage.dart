@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mystic_trails/models/universe.dart';
 import 'package:mystic_trails/views/charactercreation.dart';
 import 'package:provider/provider.dart';
 
@@ -34,8 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Consumer<CharacterModel>(builder: (context, characterModel, child){
-              return Text("name: ${characterModel.name}");
+            Consumer<Universe>(builder: (context, universe, child){
+              return Text("name: ${universe.mainCharacter.name}");
             },),
             TextButton(
               onPressed: (){
@@ -51,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          var character = context.read<CharacterModel>();
-          character.changeName("newName");
+          var universe = context.read<Universe>();
+          universe.updateName("newName");
         },
       ),// This trailing comma makes auto-formatting nicer for build methods.
     );
