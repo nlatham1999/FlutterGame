@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/universe.dart';
 import 'package:mystic_trails/views/charactercreation.dart';
+import 'package:mystic_trails/views/gamestart.dart';
 import 'package:provider/provider.dart';
 
 import '../models/character.dart';
@@ -38,10 +39,20 @@ class _MyHomePageState extends State<MyHomePage> {
             Consumer<Universe>(builder: (context, universe, child){
               return Column(
                 children: <Widget>[
+                  if (!universe.mainCharacterInitialized) Text("Main character not initialized"),
                   Text("name: ${universe.mainCharacter.name}"),
                   Text("character type: ${universe.mainCharacter.characterType}"),
                   Text("health: ${universe.mainCharacter.health}" ),
                   Text("strength: ${universe.mainCharacter.strength}"),
+                  TextButton(
+                    onPressed: universe.mainCharacterInitialized ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const GameStart(title: "main game",)),
+                      );
+                    } : null,
+                    child: const Text("start game"),
+                  ),
                 ],
               );
               // return Text("name: ${universe.mainCharacter.name}");

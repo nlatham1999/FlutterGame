@@ -1,9 +1,9 @@
 
 import 'package:mystic_trails/models/character.dart';
 
-class Knight extends CharacterModel {
+class KnightModel extends CharacterModel {
   
-  Knight({
+  KnightModel({
     required String name
   }): super (
     name: name,

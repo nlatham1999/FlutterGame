@@ -10,11 +10,15 @@ import 'package:flutter/foundation.dart';
 import 'package:mystic_trails/main.dart';
 import 'package:mystic_trails/models/character.dart';
 import 'package:mystic_trails/models/knight.dart';
+import 'package:mystic_trails/models/place.dart';
 import 'package:mystic_trails/models/skeleton.dart';
 
 class Universe extends ChangeNotifier {
 
+  bool mainCharacterInitialized = false;
   late CharacterModel mainCharacter;
+  Map<String, CharacterModel> characters = {};
+  List<PlaceModel> places = [];
 
   //constructor
   Universe({
@@ -22,6 +26,21 @@ class Universe extends ChangeNotifier {
     required String name,
   }) {
     createNewMainCharacter(characterType, name);
+    createCharacters();
+    createPlaces();
+  }
+
+  void createPlaces() {
+    places = [
+      PlaceModel(name: "the whispery cave", characters: ["Bones"])
+    ];  
+  }
+
+  void createCharacters() {
+    characters = {
+      'Bones': SkeletonModel(name: "Bones"),
+      'The Dreadful Knight': KnightModel(name: "The Dreadful Knight")
+    };
   }
 
   //creates a whole new main character
@@ -31,7 +50,7 @@ class Universe extends ChangeNotifier {
         mainCharacter = SkeletonModel(name: name);
         break;
       case "knight":
-        mainCharacter = Knight(name: name);
+        mainCharacter = KnightModel(name: name);
         break;
       default: 
         mainCharacter = CharacterModel(name: name, characterType: "none", health: 0, strength: 0);
@@ -41,6 +60,7 @@ class Universe extends ChangeNotifier {
   //updates the main character type,
   //basically just a wrapper for createNewMainCharacter so I don't have to pass in the name each time
   void updateMainCharacterCharacterType(String characterType){
+    mainCharacterInitialized = true;
     print("TESTING" + characterType);
     createNewMainCharacter(characterType, mainCharacter.name);
     print(mainCharacter.characterType);
