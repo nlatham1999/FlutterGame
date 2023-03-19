@@ -10,9 +10,8 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => Universe(
+        characterType: "",
         name: "nil", 
-        health: 0,
-        strength: 0,
       ),
       child: const MyApp(),
     ),

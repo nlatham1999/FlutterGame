@@ -36,7 +36,15 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Consumer<Universe>(builder: (context, universe, child){
-              return Text("name: ${universe.mainCharacter.name}");
+              return Column(
+                children: <Widget>[
+                  Text("name: ${universe.mainCharacter.name}"),
+                  Text("character type: ${universe.mainCharacter.characterType}"),
+                  Text("health: ${universe.mainCharacter.health}" ),
+                  Text("strength: ${universe.mainCharacter.strength}"),
+                ],
+              );
+              // return Text("name: ${universe.mainCharacter.name}");
             },),
             TextButton(
               onPressed: (){
