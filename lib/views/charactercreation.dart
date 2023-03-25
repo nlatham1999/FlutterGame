@@ -27,9 +27,9 @@ class _CharacterCreation extends State<CharacterCreation> {
     universe.updateName(newName);
   }
 
-  void updateCharacterType(String newType){
+  void updateCharacterType(){
     var universe = context.read<Universe>();
-    universe.updateMainCharacterCharacterType(newType);
+    universe.updateMainCharacterCharacterType(_selectedItem);
   }
 
   String _selectedItem = 'skeleton';
@@ -45,10 +45,9 @@ class _CharacterCreation extends State<CharacterCreation> {
   final List<String> _characterTypes = [
     'skeleton',
     'knight',
-    'test'
   ];
 
-  DropdownButton dropdown(void Function(String) onSelected){ //List<String> itemList, void Function(String) onSelected){
+  DropdownButton dropdown(void Function() onSelected){ //List<String> itemList, void Function(String) onSelected){
      return DropdownButton(
       hint: Text('Select an item'),
       value: _selectedItem,
@@ -56,7 +55,7 @@ class _CharacterCreation extends State<CharacterCreation> {
         setState(() {
           _selectedItem = newValue;
         });
-        onSelected(newValue);
+        onSelected();
       },
       items: _characterTypes.map((item) {
         return DropdownMenuItem(
@@ -64,6 +63,52 @@ class _CharacterCreation extends State<CharacterCreation> {
           child: Text(item),
         );
       }).toList(),
+    );
+  }
+
+  ElevatedButton dropdownPopup(String buttonText, String title, String initialValue, void Function() onOkPressed ){
+    return ElevatedButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(title),
+              content: DropdownButton(
+                hint: Text('Select an item'),
+                value: initialValue,
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedItem = newValue!;
+                  });
+                },
+                items: _characterTypes.map((item) {
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(item),
+                  );
+                }).toList(),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    onOkPressed();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Ok"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Text(buttonText),
     );
   }
 
@@ -115,23 +160,20 @@ class _CharacterCreation extends State<CharacterCreation> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            dropdown(updateCharacterType),
-            textPopup("Change Name", "Change Name", updateName),
-            Consumer<Universe>(builder: (context, characterModel, child){
-              return Text("name: ${characterModel.mainCharacter.name}");
+            const Text("when you are done editing your character press the back button"),
+            
+            Consumer<Universe>(builder: (context, universe, child){
+              return Column(children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                  Text("name: ${universe.mainCharacter.name}"),
+                  textPopup("Change Name", "Change Name", updateName),
+                ],),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+                  Text("character type: ${universe.mainCharacter.characterType}"),
+                  dropdownPopup("Change character type", "Select character type", universe.mainCharacter.characterType, updateCharacterType),
+                ],),
+              ],);
             },),
-            TextButton(
-              onPressed: (){
-
-              }, 
-              child: const Text("create new character")
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Go back!'),
-            ),
           ],
         ),
       ),

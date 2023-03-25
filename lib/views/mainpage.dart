@@ -39,11 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Consumer<Universe>(builder: (context, universe, child){
               return Column(
                 children: <Widget>[
-                  if (!universe.mainCharacterInitialized) Text("Main character not initialized"),
-                  Text("name: ${universe.mainCharacter.name}"),
-                  Text("character type: ${universe.mainCharacter.characterType}"),
-                  Text("health: ${universe.mainCharacter.health}" ),
-                  Text("strength: ${universe.mainCharacter.strength}"),
+                  if (!universe.mainCharacterInitialized) Text("Main character not created yet \nClick on 'create new character'"),
                   TextButton(
                     onPressed: universe.mainCharacterInitialized ? () {
                       Navigator.push(
@@ -51,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         MaterialPageRoute(builder: (context) => const GameStart(title: "main game",)),
                       );
                     } : null,
-                    child: const Text("start game"),
+                    child: const Text("Begin your journey"),
                   ),
                 ],
               );
@@ -69,12 +65,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          var universe = context.read<Universe>();
-          universe.updateName("newName");
-        },
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+      bottomSheet: Consumer<Universe>(builder: (context, universe, child){
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("name: ${universe.mainCharacter.name}"),
+            Text("type: ${universe.mainCharacter.characterType}"),
+            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}")
+        ],);
+      },),
     );
   }
 }

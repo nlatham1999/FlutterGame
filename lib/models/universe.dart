@@ -18,7 +18,9 @@ class Universe extends ChangeNotifier {
   bool mainCharacterInitialized = false;
   late CharacterModel mainCharacter;
   Map<String, CharacterModel> characters = {};
-  List<PlaceModel> places = [];
+  Map<String, PlaceModel> places = {};
+
+  String attackFocus = "";
 
   //constructor
   Universe({
@@ -31,9 +33,9 @@ class Universe extends ChangeNotifier {
   }
 
   void createPlaces() {
-    places = [
-      PlaceModel(name: "the whispery cave", characters: ["Bones"])
-    ];  
+    places = {
+      "the whispery cave": PlaceModel(name: "the whispery cave", characters: ["Bones"]),
+    };  
   }
 
   void createCharacters() {
@@ -53,7 +55,7 @@ class Universe extends ChangeNotifier {
         mainCharacter = KnightModel(name: name);
         break;
       default: 
-        mainCharacter = CharacterModel(name: name, characterType: "none", health: 0, strength: 0);
+        mainCharacter = KnightModel(name: name);
     }
   }
 
@@ -61,9 +63,7 @@ class Universe extends ChangeNotifier {
   //basically just a wrapper for createNewMainCharacter so I don't have to pass in the name each time
   void updateMainCharacterCharacterType(String characterType){
     mainCharacterInitialized = true;
-    print("TESTING" + characterType);
     createNewMainCharacter(characterType, mainCharacter.name);
-    print(mainCharacter.characterType);
     notifyListeners();
   }
 
@@ -72,6 +72,50 @@ class Universe extends ChangeNotifier {
   void updateName(String newName){
     mainCharacter.name = newName;
     notifyListeners();
+  }
+
+  void updateAttackFocus(String attackFocus){
+    this.attackFocus = attackFocus;
+    notifyListeners();
+  }  
+
+  String fightAtPlace(String location){
+
+    if (location == ""){
+      return "You cannot select an empty location";
+    }
+
+    if (places[location] == null){
+      return "location $location not found";
+    }
+
+    if (attackFocus == "") {
+      return "You need to select an opponent to focus your attack";
+    }
+
+    if (characters[attackFocus] == null) {
+      return "character $attackFocus not found";
+    }
+
+    print(characters[attackFocus]!.health);
+
+    //first the main character fights the highlighted opponent
+    mainCharacter.attackOpponent(characters[attackFocus]!);
+
+    
+    print(characters[attackFocus]!.health);
+
+    //after the main character attacks then all the other characters in the place attack
+    for(String opponent in places[location]!.characters){
+      if(characters[opponent] == null){
+        return "opponent $opponent not found";
+      }
+      characters[opponent]!.attackOpponent(mainCharacter);
+    }
+
+    notifyListeners();
+
+    return "";
   }
 
 }

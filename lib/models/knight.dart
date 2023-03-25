@@ -9,11 +9,20 @@ class KnightModel extends CharacterModel {
     name: name,
     characterType: "knight",
     health: 90,
-    strength: 70
+    attack: 7
   );
 
   @override
   void specialAttack(){
 
+  }
+
+  @override
+  attackOpponent(CharacterModel opponent){
+    opponent.health = opponent.health - this.attack;
+
+    if (opponent.health < 0) {
+      opponent.health = 0;
+    }
   }
 }

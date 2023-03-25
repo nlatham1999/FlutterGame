@@ -8,12 +8,21 @@ class SkeletonModel extends CharacterModel {
   }): super (
     name: name,
     characterType: "skeleton",
-    health: 50,
-    strength: 50
+    health: 60,
+    attack: 10
   );
 
   @override
   void specialAttack(){
 
+  }
+
+  @override
+  attackOpponent(CharacterModel opponent){
+    opponent.health = opponent.health - this.attack;
+
+    if (opponent.health < 0) {
+      opponent.health = 0;
+    }
   }
 }
