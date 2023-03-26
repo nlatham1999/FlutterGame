@@ -7,11 +7,12 @@
 //obviously a consideration here is that it doesn't become too large
 
 import 'package:flutter/foundation.dart';
-import 'package:mystic_trails/main.dart';
 import 'package:mystic_trails/models/character.dart';
+import 'package:mystic_trails/models/goblin.dart';
 import 'package:mystic_trails/models/knight.dart';
 import 'package:mystic_trails/models/place.dart';
 import 'package:mystic_trails/models/skeleton.dart';
+import 'package:mystic_trails/models/skeletonarcher.dart';
 
 class Universe extends ChangeNotifier {
 
@@ -34,14 +35,19 @@ class Universe extends ChangeNotifier {
 
   void createPlaces() {
     places = {
-      "the whispery cave": PlaceModel(name: "the whispery cave", characters: ["Bones"]),
+      "the whispery cave": PlaceModel(name: "the whispery cave", characters: ["Bones", "Ribsy"], gold: 100),
+      "the lone tower": PlaceModel(name: "the lone tower", characters: ["The Dreadful Knight"], gold: 50),
+      "the damp hole": PlaceModel(name: "the damp hole", characters: ["Gobbles", "Gibbles"], gold: 50),
     };  
   }
 
   void createCharacters() {
     characters = {
-      'Bones': SkeletonModel(name: "Bones"),
-      'The Dreadful Knight': KnightModel(name: "The Dreadful Knight")
+      'Bones': SkeletonModel(name: "Bones", gold: 10),
+      'Ribsy': SkeletonArcherModel(name: "Ribsy", gold: 10),
+      'Gobbles': GoblinModel(name: "Gobbles", gold: 10),
+      'Gibbles': GoblinModel(name: "Gibbles", gold: 10),
+      'The Dreadful Knight': KnightModel(name: "The Dreadful Knight", gold: 10)
     };
   }
 
@@ -49,13 +55,13 @@ class Universe extends ChangeNotifier {
   void createNewMainCharacter(String characterType, String name){
     switch(characterType){
       case "skeleton":
-        mainCharacter = SkeletonModel(name: name);
+        mainCharacter = SkeletonModel(name: name, gold: 0);
         break;
       case "knight":
-        mainCharacter = KnightModel(name: name);
+        mainCharacter = KnightModel(name: name, gold: 0);
         break;
       default: 
-        mainCharacter = KnightModel(name: name);
+        mainCharacter = KnightModel(name: name, gold: 0);
     }
   }
 
@@ -97,25 +103,43 @@ class Universe extends ChangeNotifier {
       return "character $attackFocus not found";
     }
 
-    print(characters[attackFocus]!.health);
+    String message = "";
 
     //first the main character fights the highlighted opponent
-    mainCharacter.attackOpponent(characters[attackFocus]!);
-
+    message += mainCharacter.attackOpponent(characters[attackFocus]!);
     
-    print(characters[attackFocus]!.health);
+    //if the opponent is killed, remove them from the place and pass the gold
+    if(characters[attackFocus]!.health == 0){
+      attackFocus = "";
+    }
 
     //after the main character attacks then all the other characters in the place attack
     for(String opponent in places[location]!.characters){
       if(characters[opponent] == null){
         return "opponent $opponent not found";
       }
-      characters[opponent]!.attackOpponent(mainCharacter);
+      message += characters[opponent]!.attackOpponent(mainCharacter);
     }
 
     notifyListeners();
 
-    return "";
+    return message;
+  }
+
+  String lootBody(String characterName){
+    if(characterName == ""){
+      return "loot-ee is not provided";
+    }
+
+    if(characters[characterName] == null){
+      return "$characterName not found";
+    }
+
+    String message = mainCharacter.lootBody(characters[characterName]!);
+
+    notifyListeners();
+
+    return message;
   }
 
 }

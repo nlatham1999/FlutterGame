@@ -71,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text("name: ${universe.mainCharacter.name}"),
             Text("type: ${universe.mainCharacter.characterType}"),
-            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}")
+            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
+            Text("gold: ${universe.mainCharacter.gold}"),
         ],);
       },),
     );

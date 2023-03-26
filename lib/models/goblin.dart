@@ -1,16 +1,16 @@
 
 import 'package:mystic_trails/models/character.dart';
 
-class KnightModel extends CharacterModel {
+class GoblinModel extends CharacterModel {
   
-  KnightModel({
+  GoblinModel({
     required String name,
     required int gold,
   }): super (
     name: name,
-    characterType: "knight",
-    health: 90,
-    attack: 7,
+    characterType: "goblin",
+    health: 20,
+    attack: 5,
     gold: gold,
   );
 

@@ -47,6 +47,16 @@ class _GameStart extends State<GameStart> {
           ],
         ),
       ),
+      bottomSheet: Consumer<Universe>(builder: (context, universe, child){
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("name: ${universe.mainCharacter.name}"),
+            Text("type: ${universe.mainCharacter.characterType}"),
+            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
+            Text("gold: ${universe.mainCharacter.gold}"),
+        ],);
+      },),
     );
   }
 }

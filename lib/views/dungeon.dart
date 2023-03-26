@@ -23,14 +23,51 @@ class _Dungeon extends State<Dungeon> {
     universe.updateAttackFocus(attackFocus);
   }
 
+  void leavePlace(){
+    var universe = context.read<Universe>();
+    universe.updateAttackFocus("");
+  }
+
   void doFight(){
     var universe = context.read<Universe>();
     String output = universe.fightAtPlace(widget.title);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return afterFightPopup(output);
+      }
+  );
+  }
+
+  void lootBody(String opponentName){
+    var universe = context.read<Universe>();
+    String output = universe.lootBody(opponentName);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return afterFightPopup(output);
+        }
+    );
+  }
+  
+  AlertDialog afterFightPopup(String message){
+    return AlertDialog(
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("Ok"),
+        ),
+      ],
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) {   
+    return WillPopScope(onWillPop: () async {leavePlace(); return true;},
+    child: Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -50,21 +87,30 @@ class _Dungeon extends State<Dungeon> {
                         Text("type: ${universe.characters[opponent]!.characterType}"),
                         Text("health: ${universe.characters[opponent]!.health}"),
                         Text("attack: ${universe.characters[opponent]!.attack}"),
-                        MaterialButton(onPressed: () {updateAttackFocus(opponent);}, child: Text("focus attack on $opponent!"),)
+                        if(universe.characters[opponent]!.health > 0)
+                          TextButton(onPressed: () {updateAttackFocus(opponent);}, child: Text("focus attack on $opponent!"),)
+                        else if (!universe.characters[opponent]!.looted)
+                          TextButton(onPressed: () {lootBody(opponent);}, child: const Text("loot body"))
                       ]),
-                    Container(child: Column(children: [
-                      Text("${universe.mainCharacter.name}"),
-                      Text("${universe.mainCharacter.health}"),
-                      Text("${universe.mainCharacter.attack}"),
-                    ]),),
-                    MaterialButton(onPressed: (){doFight();}, child: const Text("Fight!"),)
+                    TextButton(onPressed: (){doFight();}, child: const Text("Fight!"),)
                   ],
                 )
               );
             },),
+              
           ],
         ),
       ),
-    );
+      bottomSheet: Consumer<Universe>(builder: (context, universe, child){
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("name: ${universe.mainCharacter.name}"),
+            Text("type: ${universe.mainCharacter.characterType}"),
+            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
+            Text("gold: ${universe.mainCharacter.gold}"),
+        ],);
+      },),
+    ));
   }
 }
