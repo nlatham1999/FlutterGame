@@ -26,6 +26,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  void resetGameProgress(){
+    var universe = context.read<Universe>();
+    universe.resetUniverse();
+    print(universe.mainCharacter.name);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,29 +45,47 @@ class _MyHomePageState extends State<MyHomePage> {
             Consumer<Universe>(builder: (context, universe, child){
               return Column(
                 children: <Widget>[
-                  if (!universe.mainCharacterInitialized) Text("Main character not created yet \nClick on 'create new character'"),
+                  if (!universe.mainCharacterInitialized) const Text("Main character not created yet \nClick on 'create new character'"),
                   TextButton(
                     onPressed: universe.mainCharacterInitialized ? () {
+                      universe.startGame();
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const GameStart(title: "main game",)),
                       );
                     } : null,
-                    child: const Text("Begin your journey"),
+
+                    child:
+                      Text(universe.gameStarted ? "Continue your journey" : "Begin your journey"),
                   ),
+
+                  TextButton(
+                    onPressed: !universe.gameStarted ? (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CharacterCreation(title: "character creation",)),
+                      );
+                    } : null, 
+                    child: const Text("Build your character")
+                  ),
+
+                  TextButton(onPressed: universe.gameStarted ? (){
+                    showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
+                      title: const Text("Are you sure you want to reset your progress?"),
+                      actions: [
+                        TextButton(onPressed: (){Navigator.of(context).pop();}, child: const Text("no, do not reset")),
+                        TextButton(onPressed: (){Navigator.of(context).pop(); resetGameProgress();}, child: const Text("yes, reset progress"))
+                      ],
+                      );});
+                    } : null, 
+                    child: const Text("New Game")
+                  )
                 ],
               );
               // return Text("name: ${universe.mainCharacter.name}");
             },),
-            TextButton(
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CharacterCreation(title: "character creation",)),
-                );
-              }, 
-              child: const Text("create new character")
-            ),
+            
+            
           ],
         ),
       ),

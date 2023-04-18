@@ -17,6 +17,7 @@ import 'package:mystic_trails/models/skeletonarcher.dart';
 class Universe extends ChangeNotifier {
 
   bool mainCharacterInitialized = false;
+  bool gameStarted = false;
   late CharacterModel mainCharacter;
   Map<String, CharacterModel> characters = {};
   Map<String, PlaceModel> places = {};
@@ -28,9 +29,20 @@ class Universe extends ChangeNotifier {
     required String characterType,
     required String name,
   }) {
+    buildUniverse(characterType, name);
+  }
+
+  buildUniverse(String characterType, String name){
     createNewMainCharacter(characterType, name);
     createCharacters();
     createPlaces();
+    mainCharacterInitialized = false;
+    gameStarted = false;
+  }
+
+  void resetUniverse(){
+    buildUniverse("knight", "nil");
+    notifyListeners();
   }
 
   void createPlaces() {
@@ -39,6 +51,11 @@ class Universe extends ChangeNotifier {
       "the lone tower": PlaceModel(name: "the lone tower", characters: ["The Dreadful Knight"], gold: 50),
       "the damp hole": PlaceModel(name: "the damp hole", characters: ["Gobbles", "Gibbles"], gold: 50),
     };  
+  }
+
+  void startGame(){
+    gameStarted = true;
+    notifyListeners();
   }
 
   void createCharacters() {
