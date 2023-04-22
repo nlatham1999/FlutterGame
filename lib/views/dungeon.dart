@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/character.dart';
+import 'package:mystic_trails/views/styles/main_styles.dart';
 import 'package:provider/provider.dart';
 
 import '../models/universe.dart';
@@ -101,16 +102,20 @@ class _Dungeon extends State<Dungeon> {
           ],
         ),
       ),
-      bottomSheet: Consumer<Universe>(builder: (context, universe, child){
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("name: ${universe.mainCharacter.name}"),
-            Text("type: ${universe.mainCharacter.characterType}"),
-            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
-            Text("gold: ${universe.mainCharacter.gold}"),
-        ],);
-      },),
+      bottomSheet: Theme( 
+        data: MainStyles.bottomSheetStyle(),
+        child: Consumer<Universe>(builder: (context, universe, child){
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text("name: ${universe.mainCharacter.name}"),
+              Text("type: ${universe.mainCharacter.characterType}"),
+              Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
+              Text("gold: ${universe.mainCharacter.gold}"),
+            ],
+          );
+        },),
+      ),
     ));
   }
 }

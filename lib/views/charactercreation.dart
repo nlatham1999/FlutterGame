@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/universe.dart';
+import 'package:mystic_trails/views/styles/main_styles.dart';
 import 'package:provider/provider.dart';
 
 import '../models/character.dart';
@@ -59,6 +60,11 @@ class _CharacterCreation extends State<CharacterCreation> {
     'skeleton',
     'knight',
   ];
+
+  final Map<String, String> _characterTypesToImage = {
+    'skeleton': "assets/shield.png",
+    'knight': "assets/knight.png",
+  };
 
   late String _selectedValue;
   ElevatedButton dropdownPopup(String buttonText, String title, void Function(String) onOkPressed ){
@@ -151,23 +157,52 @@ class _CharacterCreation extends State<CharacterCreation> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/armory.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text("when you are done editing your character click on 'Save Changes'"),
             
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                Text("name: $_playerName"),
-                textPopup("Change Name", "Change Name", updateName),
-            ],),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .7,
+              child: Text("when you are done editing your character click on 'Save Changes'", style: MainStyles.buttonTextStyle(),),
+            ),
 
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
-              Text("character type: $_playerCharacterType"),
-              dropdownPopup("Change character type", "Select character type", updateCharacterType),
-            ],),
+            Container(
+              margin:  const EdgeInsets.only(top: 40.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                  Text("name: $_playerName", style: MainStyles.buttonTextStyle(),),
+                  textPopup("Change Name", "Change Name", updateName),
+              ],),
+            ),
 
-            TextButton(
+            Container(
+              width: MediaQuery.of(context).size.width * .4,
+              height: MediaQuery.of(context).size.height * .4,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(_characterTypesToImage[_playerCharacterType]!),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            
+            Container(
+              margin: EdgeInsets.only(bottom: 40),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+                Text("character type: $_playerCharacterType", style: MainStyles.buttonTextStyle(),),
+                dropdownPopup("Change character type", "Select character type", updateCharacterType),
+              ],),
+            ),
+
+            ElevatedButton(
               onPressed: (){
                 saveChanges();
               }, 

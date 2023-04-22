@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/universe.dart';
 import 'package:mystic_trails/views/charactercreation.dart';
 import 'package:mystic_trails/views/gamestart.dart';
+import 'package:mystic_trails/views/styles/main_styles.dart';
 import 'package:provider/provider.dart';
 
 import '../models/character.dart';
@@ -29,7 +30,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void resetGameProgress(){
     var universe = context.read<Universe>();
     universe.resetUniverse();
-    print(universe.mainCharacter.name);
   }
 
   @override
@@ -38,48 +38,75 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/main_page_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Consumer<Universe>(builder: (context, universe, child){
               return Column(
                 children: <Widget>[
-                  if (!universe.mainCharacterInitialized) const Text("Main character not created yet \nClick on 'create new character'"),
-                  TextButton(
-                    onPressed: universe.mainCharacterInitialized ? () {
-                      universe.startGame();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GameStart(title: "main game",)),
-                      );
-                    } : null,
+                  if (!universe.mainCharacterInitialized) Text("Main character not created yet \nClick on 'create new character'", style: MainStyles.buttonTextStyle()),
+                  
 
-                    child:
-                      Text(universe.gameStarted ? "Continue your journey" : "Begin your journey"),
+                  Container(
+                    width: MediaQuery.of(context).size.width * MainStyles.buttonWidthPercentage(),
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: MainStyles.mainButtonStyle(),
+                    child: universe.mainCharacterInitialized ? TextButton(
+                      onPressed: () {
+                        universe.startGame();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const GameStart(title: "main game",)),
+                        );
+                      },
+
+                      child:
+                        Text(universe.gameStarted ? "Continue your journey" : "Begin your journey", style: MainStyles.buttonTextStyle(),),
+                    ) : null,
                   ),
 
-                  TextButton(
-                    onPressed: !universe.gameStarted ? (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CharacterCreation(title: "character creation",)),
-                      );
-                    } : null, 
-                    child: const Text("Build your character")
+                  
+                  Container(
+                    width: MediaQuery.of(context).size.width * MainStyles.buttonWidthPercentage(),
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: MainStyles.mainButtonStyle(),
+                    child: !universe.gameStarted ? TextButton(
+                      onPressed:  (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const CharacterCreation(title: "character creation",)),
+                        );
+                      }, 
+
+                      child: Text("Build your character", style: MainStyles.buttonTextStyle()),
+                    )  : null,
                   ),
 
-                  TextButton(onPressed: universe.gameStarted ? (){
-                    showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
-                      title: const Text("Are you sure you want to reset your progress?"),
-                      actions: [
-                        TextButton(onPressed: (){Navigator.of(context).pop();}, child: const Text("no, do not reset")),
-                        TextButton(onPressed: (){Navigator.of(context).pop(); resetGameProgress();}, child: const Text("yes, reset progress"))
-                      ],
-                      );});
-                    } : null, 
-                    child: const Text("New Game")
-                  )
+                  Container(
+                    width: MediaQuery.of(context).size.width * MainStyles.buttonWidthPercentage(),
+                    margin: const EdgeInsets.all(5.0),
+                    decoration: MainStyles.mainButtonStyle(),
+                    child: universe.gameStarted ? TextButton(onPressed: (){
+                      showDialog(context: context, builder: (BuildContext context) { return AlertDialog(
+                        title: const Text("Are you sure you want to reset your progress?"),
+                        actions: [
+                          TextButton(onPressed: (){Navigator.of(context).pop();}, child: const Text("no, do not reset")),
+                          TextButton(onPressed: (){Navigator.of(context).pop(); resetGameProgress();}, child: const Text("yes, reset progress"))
+                        ],
+                        );});
+                      } , 
+                      child: Text("New Game", style: MainStyles.buttonTextStyle())
+                    ) : null,
+                  ),
                 ],
               );
               // return Text("name: ${universe.mainCharacter.name}");
@@ -89,16 +116,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      bottomSheet: Consumer<Universe>(builder: (context, universe, child){
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("name: ${universe.mainCharacter.name}"),
-            Text("type: ${universe.mainCharacter.characterType}"),
-            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
-            Text("gold: ${universe.mainCharacter.gold}"),
-        ],);
-      },),
+
+      bottomSheet: Container(
+        decoration: MainStyles.mainBottomBar(),
+        height: MediaQuery.of(context).size.height * MainStyles.bottomBarPercentage(),
+        
+        child: Consumer<Universe>(builder: (context, universe, child){
+          return DefaultTextStyle(
+            style: MainStyles.bottomBarTextStyle(context), 
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text("name: ${universe.mainCharacter.name}"),
+                Text("type: ${universe.mainCharacter.characterType}"),
+                Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
+                Text("gold: ${universe.mainCharacter.gold}"),
+              ],
+            ),
+          );
+        },),
+      ),
     );
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/character.dart';
 import 'package:mystic_trails/models/universe.dart';
+import 'package:mystic_trails/util/util.dart';
 import 'package:mystic_trails/views/mainpage.dart';
+import 'package:mystic_trails/views/styles/main_styles.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mystic Trails',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: MainStyles.mainBackgroundColor()
       ),
       home: const MyHomePage(title: 'Mystic Trails'),
     );
