@@ -3,6 +3,7 @@ import 'package:mystic_trails/models/universe.dart';
 import 'package:mystic_trails/views/charactercreation.dart';
 import 'package:mystic_trails/views/gamestart.dart';
 import 'package:mystic_trails/views/styles/main_styles.dart';
+import 'package:mystic_trails/views/view_utils/util.dart';
 import 'package:provider/provider.dart';
 
 import '../models/character.dart';
@@ -35,15 +36,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: ViewUtils.topAppBar(widget.title, context),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/main_page_background.png'),
+            image: AssetImage('assets/forest_background.jpg'),
             fit: BoxFit.cover,
           ),
         ),

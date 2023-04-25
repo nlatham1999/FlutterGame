@@ -70,7 +70,13 @@ flutter:
     - assets/stone_wall_0.jpg
     - assets/armory.png
     - assets/knight.png
+    - assets/knight_1.png
     - assets/shield.png
+    - assets/money-bag.png
+    - assets/forest_background.jpg
+    - assets/cave_0.png
+    - assets/cave_1.jpg
+    - assets/tower_0.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

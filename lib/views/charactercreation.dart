@@ -170,43 +170,53 @@ class _CharacterCreation extends State<CharacterCreation> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .7,
-              child: Text("when you are done editing your character click on 'Save Changes'", style: MainStyles.buttonTextStyle(),),
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * .7,
+                child: Text("when you are done editing your character click on 'Save Changes'", style: MainStyles.buttonTextStyle(),),
+              ),
             ),
 
-            Container(
-              margin:  const EdgeInsets.only(top: 40.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                  Text("name: $_playerName", style: MainStyles.buttonTextStyle(),),
-                  textPopup("Change Name", "Change Name", updateName),
-              ],),
+            Expanded(
+              child: Container(
+                margin:  const EdgeInsets.only(top: 40.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                    Text("name: $_playerName", style: MainStyles.buttonTextStyle(),),
+                    textPopup("Change Name", "Change Name", updateName),
+                ],),
+              ),
             ),
 
-            Container(
-              width: MediaQuery.of(context).size.width * .4,
-              height: MediaQuery.of(context).size.height * .4,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(_characterTypesToImage[_playerCharacterType]!),
-                  fit: BoxFit.contain,
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width * .4,
+                height: MediaQuery.of(context).size.height * .4,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(_characterTypesToImage[_playerCharacterType]!),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
             
-            Container(
-              margin: EdgeInsets.only(bottom: 40),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
-                Text("character type: $_playerCharacterType", style: MainStyles.buttonTextStyle(),),
-                dropdownPopup("Change character type", "Select character type", updateCharacterType),
-              ],),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 40),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,children: [
+                  Text("character type: $_playerCharacterType", style: MainStyles.buttonTextStyle(),),
+                  dropdownPopup("Change character type", "Select character type", updateCharacterType),
+                ],),
+              ),
             ),
 
-            ElevatedButton(
-              onPressed: (){
-                saveChanges();
-              }, 
-              child: const Text("Save Changes")
+            Expanded(
+              child: ElevatedButton(
+                onPressed: (){
+                  saveChanges();
+                }, 
+                child: const Text("Save Changes")
+              ),
             ),
           ],
         ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/place.dart';
 import 'package:mystic_trails/models/universe.dart';
 import 'package:mystic_trails/views/dungeon.dart';
+import 'package:mystic_trails/views/styles/main_styles.dart';
+import 'package:mystic_trails/views/view_utils/util.dart';
 import 'package:provider/provider.dart';
 
 class GameStart extends StatefulWidget {
@@ -19,26 +21,39 @@ class _GameStart extends State<GameStart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
+      appBar: ViewUtils.topAppBar(widget.title, context),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/main_page_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Consumer<Universe>(builder: (context, universe, child){
               return Column(
                 children: [
+
                   for(String placeName in universe.places.keys)
-                    TextButton(
-                      onPressed: () {
-                        String text = placeName;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Dungeon(title: text,)),
-                        );
-                      }, 
-                      child: Text("enter ${placeName}")
+
+                    Container(
+                      width: MediaQuery.of(context).size.width * MainStyles.buttonWidthPercentage(),
+                      margin: const EdgeInsets.all(5.0),
+                      decoration: MainStyles.mainButtonStyle(),
+                      child: TextButton(
+                        onPressed: () {
+                          String text = placeName;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Dungeon(title: text, backgroundImage: universe.places[placeName]!.backgroundImage,)),
+                          );
+                        }, 
+                        child: Text("enter $placeName", style: MainStyles.buttonTextStyle(),)
+                      ),
                     ),
                 ],
               );
@@ -47,16 +62,6 @@ class _GameStart extends State<GameStart> {
           ],
         ),
       ),
-      bottomSheet: Consumer<Universe>(builder: (context, universe, child){
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text("name: ${universe.mainCharacter.name}"),
-            Text("type: ${universe.mainCharacter.characterType}"),
-            Text("health: ${universe.mainCharacter.health}/${universe.mainCharacter.maxHealth}"),
-            Text("gold: ${universe.mainCharacter.gold}"),
-        ],);
-      },),
     );
   }
 }

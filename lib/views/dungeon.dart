@@ -4,14 +4,16 @@
 import 'package:flutter/material.dart';
 import 'package:mystic_trails/models/character.dart';
 import 'package:mystic_trails/views/styles/main_styles.dart';
+import 'package:mystic_trails/views/view_utils/util.dart';
 import 'package:provider/provider.dart';
 
 import '../models/universe.dart';
 
 class Dungeon extends StatefulWidget {
-  Dungeon({super.key, required this.title});
+  Dungeon({super.key, required this.title, required this.backgroundImage});
 
   String title;
+  String backgroundImage;
 
   @override
   State<Dungeon> createState() => _Dungeon();
@@ -69,19 +71,25 @@ class _Dungeon extends State<Dungeon> {
   Widget build(BuildContext context) {   
     return WillPopScope(onWillPop: () async {leavePlace(); return true;},
     child: Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
+      appBar: ViewUtils.topAppBar(widget.title, context),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(widget.backgroundImage),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           children: <Widget>[
-            Text("you are in the ${widget.title}"),
+            Text("you are in the ${widget.title}, ${widget.backgroundImage}"),
             Consumer<Universe>(builder: (context, universe, child){
               return (
                 Column(
                   children: [
                     Text("attack focus: ${universe.attackFocus} "),
-                    Text("Opponents:"),
+                    const Text("Opponents:"),
                     for (String opponent in universe.places[widget.title]!.characters) 
                       Column(children: [
                         Text("name: $opponent"),

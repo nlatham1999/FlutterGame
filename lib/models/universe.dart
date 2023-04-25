@@ -47,9 +47,9 @@ class Universe extends ChangeNotifier {
 
   void createPlaces() {
     places = {
-      "the whispery cave": PlaceModel(name: "the whispery cave", characters: ["Bones", "Ribsy"], gold: 100),
-      "the lone tower": PlaceModel(name: "the lone tower", characters: ["The Dreadful Knight"], gold: 50),
-      "the damp hole": PlaceModel(name: "the damp hole", characters: ["Gobbles", "Gibbles"], gold: 50),
+      "the whispery cave": PlaceModel(name: "the whispery cave", characters: ["Bones", "Ribsy"], gold: 100, backgroundImage: "assets/cave_0.png"),
+      "the lone tower": PlaceModel(name: "the lone tower", characters: ["The Dreadful Knight"], gold: 50, backgroundImage: "assets/cave_1.jpg"),
+      "the damp hole": PlaceModel(name: "the damp hole", characters: ["Gobbles", "Gibbles"], gold: 50, backgroundImage: "assets/tower_0.png"),
     };  
   }
 
